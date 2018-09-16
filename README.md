@@ -24,7 +24,7 @@ d-1
 ### Setup
 ```
 # clone the repository
-git clone https:github.com/ethanjwright/dndhelper ~/dndhelper
+git clone https://github.com/EthanJWright/DndHelper.git ~/dndhelper
 
 # install the requirements
 cd ~/dndhelper
