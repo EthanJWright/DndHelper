@@ -6,7 +6,6 @@ import os
 import sys
 import json
 import operator
-import platform
 
 
 def load():
@@ -20,19 +19,27 @@ def load():
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
+    OKGREEN = '\033[32m'
     WARNING = '\033[93m'
     FAIL = '\033[91m'
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+    YELLOW = '\033[33m'
+
+
+def is_linux():
+    if sys.platform == "linux":
+        return True
+
+    return False
 
 
 def printer(die_type, result):
-    if not platform.linux_distribution():
+    if not is_linux():
         green = bcolors.OKGREEN
-        blue = bcolors.OKBLUE
-        yellow = bcolors.WARNING
+        blue = bcolors.HEADER
+        yellow = bcolors.YELLOW
         red = bcolors.FAIL
         fail = bcolors.FAIL + bcolors.BOLD
     else:
@@ -56,7 +63,7 @@ def printer(die_type, result):
         color = fail
         attrs.append('blink')
 
-    if not platform.linux_distribution():
+    if not is_linux():
         print(color + figlet_format(" ".join(str(result)), font='big') + bcolors.ENDC)
     else:
         cprint(figlet_format(" ".join(str(result)),
