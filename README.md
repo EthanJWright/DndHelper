@@ -33,6 +33,7 @@ pip3 install -r requirements.txt
 
 ### Features
 Features of CLI:
+
     * Flashing output when crit miss or hit
     * 4 grades of roll ( green, blue, yellow, red )
     * History saved to disk for quick rolling
