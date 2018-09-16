@@ -7,6 +7,8 @@ import sys
 import json
 import operator
 
+initiative = {}
+
 
 def load():
     global history
@@ -133,6 +135,16 @@ def disadvantage(user):
     printer(20 + adding, selected + adding)
 
 
+def roll_initiative():
+    global initiative
+    print_text("Initiative: ")
+    print_text(str(initiative["value"]))
+    print("---------------------------------------------------")
+    outcome = rolled(20)
+    print_reg("Result was: ")
+    printer(20+initiative["value"], outcome + initiative["value"])
+
+
 def print_usage():
     print("Enter dnd rolling commands: ")
     print("3d8+4")
@@ -149,6 +161,11 @@ def roll(user):
 
     if user[0] == 'h':
         get_hist()
+
+        return
+
+    if user[0] == "i":
+        roll_initiative()
 
         return
 
@@ -223,6 +240,45 @@ def save():
         file.write(json.dumps(history))
 
 
+def get_user_init():
+    while True:
+        user = input("Enter new initiative bonus: ")
+        try:
+            init = int(user)
+            print("New initiative bonus is: " + str(init))
+            user = input("Is this correct? (y/n) | ")
+
+            if user == "y":
+                return init
+        except ValueError:
+            print("Please enter a number.")
+        except KeyboardInterrupt:
+            exit()
+
+
+def load_initiative():
+    global initiative
+
+    if os.path.isfile('initiative.json'):
+        with open('initiative.json') as f:
+            initiative = json.load(f)
+
+        try:
+            user = input("Current initiative bonus is: " +
+                         str(initiative["value"]) + " is this correct? (y/n) | ")
+        except KeyboardInterrupt:
+            exit()
+
+        if user is not "y":
+            initiative["value"] = get_user_init()
+    else:
+        initiative["value"] = get_user_init()
+
+    with open('initiative.json', 'w') as file:
+                # use `json.loads` to do the reverse
+        file.write(json.dumps(initiative))
+
+
 def get_hist():
     global history
     # Sort dictionary by most used items
@@ -256,9 +312,17 @@ def get_hist():
     return
 
 
+def exit():
+    save()
+    print("\n")
+    print("Exiting the program!")
+    sys.exit(1)
+
+
 def main():
     global history
     history = {}
+    load_initiative()
     load()
 
     while True:
@@ -266,10 +330,7 @@ def main():
             user = input("Enter a die roll: ")
             roll(user.replace(" ", ""))
         except KeyboardInterrupt:
-            save()
-            print("\n")
-            print("Exiting the program!")
-            sys.exit(1)
+            exit()
 
 
 if __name__ == "__main__":
