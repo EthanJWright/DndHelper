@@ -129,7 +129,6 @@ def roll():
         parsing = broken[0]
 
     die_type = int(parsing)
-    print("Die: " + str(die_type))
 
     total = []
 
