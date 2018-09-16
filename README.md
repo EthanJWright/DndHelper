@@ -19,6 +19,9 @@ a+2
 
 # Roll with disadvantage and a bonus of -1
 d-1
+
+# Roll initiative with your character bonus
+i
 ```
 
 ### Setup
