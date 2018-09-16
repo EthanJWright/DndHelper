@@ -63,7 +63,7 @@ def advantage(user):
     else:
         selected = outcome2
     print_reg("Result was: ")
-    printer(20, selected + adding)
+    printer(20 + adding, selected + adding)
 
 
 def disadvantage(user):
@@ -86,7 +86,7 @@ def disadvantage(user):
     else:
         selected = outcome2
     print_reg("Result was: ")
-    printer(20, selected + adding)
+    printer(20 + adding, selected + adding)
 
 
 def print_usage():
