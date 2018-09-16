@@ -11,6 +11,7 @@ initiative = {}
 
 
 def load():
+    load_initiative()
     global history
 
     if os.path.isfile('history.json'):
@@ -108,7 +109,10 @@ def advantage(user):
     else:
         selected = outcome2
     print_reg("Result was: ")
-    printer(20 + adding, selected + adding)
+    res = selected + adding
+    if res < 0:
+        res = 0
+    printer(20 + adding, res)
 
 
 def disadvantage(user):
@@ -131,8 +135,11 @@ def disadvantage(user):
         selected = outcome1
     else:
         selected = outcome2
+    res = selected + adding
+    if res < 0:
+        res = 0
     print_reg("Result was: ")
-    printer(20 + adding, selected + adding)
+    printer(20 + adding, res)
 
 
 def roll_initiative():
@@ -141,8 +148,11 @@ def roll_initiative():
     print_text(str(initiative["value"]))
     print("---------------------------------------------------")
     outcome = rolled(20)
+    res = outcome + initiative["value"]
+    if res < 0:
+        res = 0
     print_reg("Result was: ")
-    printer(20+initiative["value"], outcome + initiative["value"])
+    printer(20+initiative["value"], res)
 
 
 def print_usage():
@@ -229,6 +239,8 @@ def roll(user):
         total.append(outcome)
     max_possible = ((mult * die_type) + adding)
     final = sum(total) + adding
+    if final < 0:
+        final = 0
     print_text("Result: ")
     printer(max_possible, final)
 
@@ -322,7 +334,6 @@ def exit():
 def main():
     global history
     history = {}
-    load_initiative()
     load()
 
     while True:
