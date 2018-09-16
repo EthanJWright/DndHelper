@@ -41,4 +41,5 @@ Features of CLI:
 
 
 ### Notes
-* To clear the history, delete the `history.json` file in the folder
+* To clear the history, delete the `history.json` file in the folder and
+    restart the program.
