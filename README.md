@@ -40,4 +40,5 @@ Features of CLI:
 * Advantage / Disadvantage utility
 
 
-
+### Notes
+* To clear the history, delete the `history.json` file in the folder
