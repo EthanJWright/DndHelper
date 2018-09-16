@@ -3,6 +3,7 @@ import math
 from pyfiglet import figlet_format
 from termcolor import cprint
 import os
+import sys
 
 
 def printer(die_type, result):
@@ -154,4 +155,9 @@ def roll():
 
 
 while True:
-    roll()
+    try:
+        roll()
+    except KeyboardInterrupt:
+        print("\n")
+        print("Exiting the program!")
+        sys.exit(1)
