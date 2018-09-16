@@ -41,6 +41,7 @@ Features of CLI:
 * 4 grades of roll ( green, blue, yellow, red )
 * History saved to disk for quick rolling
 * Advantage / Disadvantage utility
+* Initiative roller with bonus saved to disk
 
 
 ### Notes
