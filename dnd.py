@@ -10,6 +10,7 @@ def printer(die_type, result):
 
     if result == die_type:
         color = 'green'
+        attrs.append('blink')
     elif result > (die_type - math.ceil(die_type * 0.2)):
         color = 'blue'
     elif result > (die_type - math.ceil(die_type * 0.5)):
