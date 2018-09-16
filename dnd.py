@@ -6,34 +6,61 @@ import os
 import sys
 import json
 import operator
+import platform
 
-if os.path.isfile('history.json'):
-    with open('history.json') as f:
-        history = json.load(f)
-else:
-    history = {}
+
+def load():
+    global history
+
+    if os.path.isfile('history.json'):
+        with open('history.json') as f:
+            history = json.load(f)
+
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 
 def printer(die_type, result):
+    if not platform.linux_distribution():
+        green = bcolors.OKGREEN
+        blue = bcolors.OKBLUE
+        yellow = bcolors.WARNING
+        red = bcolors.FAIL
+        fail = bcolors.FAIL + bcolors.BOLD
+    else:
+        green = 'green'
+        blue = 'blue'
+        yellow = 'yellow'
+        red = 'red'
+        fail = 'red'
     attrs = ['bold']
 
     if result == die_type:
-        color = 'green'
+        color = green
         attrs.append('blink')
     elif result > (die_type - math.ceil(die_type * 0.2)):
-        color = 'blue'
+        color = blue
     elif result > (die_type - math.ceil(die_type * 0.5)):
-        color = 'yellow'
+        color = yellow
     elif result is not 1:
-        color = 'red'
+        color = red
     else:
-        color = 'red'
+        color = fail
         attrs.append('blink')
 
-    cprint(figlet_format(" ".join(str(result)), font='big'), color, attrs=attrs)
-
-
-char_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    if not platform.linux_distribution():
+        print(color + figlet_format(" ".join(str(result)), font='big') + bcolors.ENDC)
+    else:
+        cprint(figlet_format(" ".join(str(result)),
+                             font='big'), color, attrs=attrs)
 
 
 def rolled(die_type):
@@ -182,6 +209,13 @@ def roll(user):
     printer(max_possible, final)
 
 
+def save():
+    global history
+    with open('history.json', 'w') as file:
+            # use `json.loads` to do the reverse
+        file.write(json.dumps(history))
+
+
 def get_hist():
     global history
     # Sort dictionary by most used items
@@ -199,6 +233,7 @@ def get_hist():
         try:
             if("c" in user or "C" in user):
                 print("Treating as cancel")
+
                 return
             val = int(user)
             got_input = True
@@ -214,14 +249,21 @@ def get_hist():
     return
 
 
-while True:
-    try:
-        user = input("Enter a die roll: ")
-        roll(user.replace(" ", ""))
-    except KeyboardInterrupt:
-        print("\n")
-        print("Exiting the program!")
-        with open('history.json', 'w') as file:
-            # use `json.loads` to do the reverse
-            file.write(json.dumps(history))
-        sys.exit(1)
+def main():
+    global history
+    history = {}
+    load()
+
+    while True:
+        try:
+            user = input("Enter a die roll: ")
+            roll(user.replace(" ", ""))
+        except KeyboardInterrupt:
+            save()
+            print("\n")
+            print("Exiting the program!")
+            sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
