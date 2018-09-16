@@ -49,6 +49,9 @@ def advantage(user):
     if ('+' in user):
         broken = user.split('+')
         adding = int(broken[-1])
+    if ('-' in user):
+        broken = user.split('-')
+        adding = 0 - int(broken[-1])
     print_reg(str(adding))
     print("---------------------------------------------------")
     outcome1 = rolled(20)
@@ -69,6 +72,9 @@ def disadvantage(user):
     if ('+' in user):
         broken = user.split('+')
         adding = int(broken[-1])
+    if ('-' in user):
+        broken = user.split('-')
+        adding = 0 - int(broken[-1])
     print_reg(str(adding))
     print("---------------------------------------------------")
     outcome1 = rolled(20)
@@ -127,6 +133,11 @@ def roll():
     if "+" in user:
         broken = parsing.split('+')
         adding = int(broken[-1])
+        parsing = broken[0]
+
+    if "-" in user:
+        broken = parsing.split('-')
+        adding = 0 - int(broken[-1])
         parsing = broken[0]
 
     die_type = int(parsing)
