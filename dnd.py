@@ -53,7 +53,7 @@ def advantage(user):
     if ('-' in user):
         broken = user.split('-')
         adding = 0 - int(broken[-1])
-    print_reg(str(adding))
+    print_text(str(adding))
     print("---------------------------------------------------")
     outcome1 = rolled(20)
     outcome2 = rolled(20)
@@ -76,7 +76,7 @@ def disadvantage(user):
     if ('-' in user):
         broken = user.split('-')
         adding = 0 - int(broken[-1])
-    print_reg(str(adding))
+    print_text(str(adding))
     print("---------------------------------------------------")
     outcome1 = rolled(20)
     outcome2 = rolled(20)
