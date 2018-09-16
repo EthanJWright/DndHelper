@@ -20,3 +20,23 @@ a+2
 # Roll with disadvantage and a bonus of -1
 d-1
 ```
+
+### Setup
+```
+# clone the repository
+git clone https:github.com/ethanjwright/dndhelper ~/dndhelper
+
+# install the requirements
+cd ~/dndhelper
+pip3 install -r requirements.txt
+```
+
+### Features
+Features of CLI:
+    - Flashing output when crit miss or hit
+    - 4 grades of roll ( green, blue, yellow, red )
+    - History saved to disk for quick rolling
+    - Advantage / Disadvantage utility
+
+
+
