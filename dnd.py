@@ -124,6 +124,11 @@ def roll(user):
         old = history[user]
         history[user] = old + 1
     else:
+        # Keep dictionary to 15 items
+
+        if len(history.keys()) >= 15:
+            small_tup = min(history.items(), key=lambda x: x[1])
+            del history[small_tup[0]]
         history[user] = 1
 
     if "help" in user or "-h" in user:
@@ -180,7 +185,8 @@ def roll(user):
 def get_hist():
     global history
     # Sort dictionary by most used items
-    history = dict(sorted(history.items(), key=operator.itemgetter(1), reverse=True))
+    history = dict(
+        sorted(history.items(), key=operator.itemgetter(1), reverse=True))
     iterate = 1
 
     for key in history:
@@ -191,6 +197,9 @@ def get_hist():
     while(not got_input):
         user = input("Select One: ")
         try:
+            if("c" in user or "C" in user):
+                print("Treating as cancel")
+                return
             val = int(user)
             got_input = True
         except ValueError:
@@ -213,5 +222,6 @@ while True:
         print("\n")
         print("Exiting the program!")
         with open('history.json', 'w') as file:
-            file.write(json.dumps(history))  # use `json.loads` to do the reverse
+            # use `json.loads` to do the reverse
+            file.write(json.dumps(history))
         sys.exit(1)
