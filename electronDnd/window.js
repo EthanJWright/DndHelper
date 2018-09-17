@@ -161,12 +161,14 @@ function categorize(result, max) {
 		if ( result == max ) {
 				return 'bg-success';
 		}
-		else if ( result > ( max - Math.ceil(max * 0.2) ) ) {
-				return 'bg-primary';
-		} 
-		else if ( result > ( max - Math.ceil(max * 0.5) ) ) {
+		else if ( result > ( max - Math.ceil(max * 0.3) ) ) {
 				return 'bg-info';
+		} 
+        /*
+		else if ( result > ( max - Math.ceil(max * 0.4) ) ) {
+				return 'bg-warning';
 		}
+        */
 		else if ( result != 1 ) {
 				return 'bg-warning'; } 
 		else {
