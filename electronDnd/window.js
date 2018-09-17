@@ -51,11 +51,12 @@ function roll(input) {
 						"max" : die_type,
 						"outcome" : outcome
 				};
-        rolled.push(die_info);
-				to_sum.push(outcome);
+        add_card(die_info);
+		to_sum.push(outcome);
         printing += outcome.toString() + " | ";
     }
     printing = printing.substring(0, printing.length - 3);
+    add_roll_info(printing);
     var total = to_sum.reduce(getSum) + adding;
 		var math_say = "";
 		for ( var i = 0; i < to_sum.length; i++ ) {
@@ -69,15 +70,14 @@ function roll(input) {
 				math_say += " - " + Math.abs(adding).toString();
 		}
 		math_say += " = " + total.toString();
+    add_total_text(math_say);
 
     var total_report = + total.toString();
 		var total_obj = {
 				"max" : (mult * die_type) + adding,
 				"outcome" : total
 		};
-    return new Promise( (resolve, reject) => {
-        resolve([rolled, total_obj, math_say, printing]);
-    });
+    add_total(total_obj);
 }
 
 function getSum(total, num) {
@@ -95,8 +95,7 @@ function categorize(result, max) {
 				return 'bg-info';
 		}
 		else if ( result != 1 ) {
-				return 'bg-warning';
-		} 
+				return 'bg-warning'; } 
 		else {
 				return 'bg-danger';
 		}
@@ -126,39 +125,39 @@ function reveal() {
 		});
 }
 
+function add_card(info) {
+    build_card(info).then( (card) => {
+        $('#die-box').append(card);
+    }).catch( (err) => {
+    });
+}
+
+function add_total(info) {
+    build_card(info).then( (card) => {
+        $('#total-box').append(card);
+    }).catch( (err) => {
+    });
+}
+
+function add_total_text(text) {
+    $('#total-output').text("Total: " + text);
+}
+
+function add_roll_info(text) {
+    $('#rolled-output').text(text);
+}
+
 $( () => {
     $('#text-input').keypress( (event) => {
         var keycode = ( event.keyCode ? event.keyCode : event.which );
         var text = $('#text-input').val();
         if ( keycode == '13' ) {
-						$('#die-box').empty();
-						$('#total-box').empty();
+            $('#die-box').empty();
+            $('#total-box').empty();
             $('#command-output').text("Command: " + text);
-						// $('#debug-output').text(text);
-						reveal();
-            roll(text).then( (results) => {
-								die_results = results[0];
-								for ( var i = 0; i < die_results.length; i++ ) {
-										build_card(die_results[i]).then( (card) => {
-												$('#die-box').append(card);
-										}).catch( (err) => {
-												// $('#debug-output').text(err);
-										});
-								}
-
-								build_card(results[1]).then( (card) =>  {
-										$('#total-box').append(card);
-								}).catch( (err) => {
-										// $('#debug-output').text(err);
-								});
-
-								// $('#debug-output').text('Changed!');
-                $('#rolled-output').text(results[3]);
-                $('#total-output').text("Total: " + results[2]);
-                $('#text-input').val('');
-            }).catch( (err) => {
-								// $('#debug-output').text(err);
-            });
+			reveal();
+            roll(text);
+			$('#text-input').val('');
         }
     });
 } );
