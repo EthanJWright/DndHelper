@@ -31,6 +31,11 @@ function get_values(input) {
         adding = parseInt(broken.slice(-1).pop());
         parsing = broken.join();
     }
+    if ( input.indexOf('-') > -1 ) {
+        broken = parsing.split('-');
+        adding = 0 - parseInt(broken.slice(-1).pop());
+        parsing = broken.join();
+    }
     die_type = parseInt(parsing);	
 		return [mult, adding, die_type];
 }
@@ -55,13 +60,81 @@ function printTotal(mult, rolls, adding, die_type, total) {
         report += " + " + adding.toString();
     }
     if ( adding < 0  ) {
-        report += " - " + Math.absolute(adding.toString());
+        report += " - " + Math.abs(adding.toString());
     }
     report += " = " + total.toString();
     add_total_text(report);
     add_total_card({
         "outcome" : rolls.reduce(getSum) + adding,
         "max" : (mult * die_type) + adding
+    });
+}
+
+function router(input) {
+    if ( input[0] == "a" ) {
+        special(input, true);
+    } 
+    else if ( input[0] == "d" ) {
+        special(input, false);
+    }
+    else {
+        roll(input);
+    }
+}
+
+function get_adding(input) {
+    if ( input.indexOf("+") > -1 ) {
+        var broken = input.split("+");
+        return parseInt(broken[broken.length - 1]);
+    }
+    if ( input.indexOf("-") > -1 ) {
+        var broken = input.split("-");
+        return 0 - parseInt(broken[broken.length - 1]);
+    }
+    return 0;
+}
+
+function special(input, advantage) {
+    var mult = 1,
+        adding = get_adding(input),
+        die_type = 20;
+    const outcome1 = Math.floor(Math.random() * (die_type)) + 1;
+    const outcome2 = Math.floor(Math.random() * (die_type)) + 1;
+    add_card({
+        "max" : die_type,
+        "outcome" : outcome1
+    });
+
+    add_card({
+        "max" : die_type,
+        "outcome" : outcome2
+    });
+
+    var final = outcome2;
+    if ( advantage ) {
+        if ( outcome1 > outcome2 ) {
+            final = outcome1;
+        }
+    } else {
+        if ( outcome1 < outcome2 ) {
+            final = outcome1;
+        }
+    }
+
+    rolls = [outcome1, outcome2];
+    displayRolls(rolls);
+    var total_string = "Total: " + final.toString();
+    if ( adding > 0 ) {
+        total_string += " + " + adding;
+    } 
+    if ( adding < 0 ) {
+        total_string += " - " + Math.abs(adding);
+    }
+
+    $('#total-output').text(total_string);
+    add_total_card({
+        "outcome" : final + adding,
+        "max" : 20 + adding
     });
 }
 
@@ -156,8 +229,8 @@ $( () => {
             $('#total-box').empty();
             $('#command-output').text("Command: " + text);
 			reveal();
-            roll(text);
 			$('#text-input').val('');
+            router(text);
         }
     });
 } );
