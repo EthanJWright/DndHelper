@@ -7,14 +7,21 @@ var macro_file = macro_file = get_path("macros.json");
 var hist_file = hist_file = get_path("history.json");
 
 const macros = load_macros();
-const history = load_history();
+
+function delete_history() {
+    history = [];
+    save_history([]);
+}
 
 
-function load_history() {
-    if ( fs.existsSync(hist_file) ) {
-        return fs.readFileSync(hist_file, 'utf8').split(',');
-    }
-    return [];
+function getHist() {
+    return new Promise ( (resolve, reject) => {
+        if ( fs.existsSync(hist_file) ) {
+            resolve(fs.readFileSync(hist_file, 'utf8').split(','));
+        }
+        resolve([]);
+    });
+
 }
 
 function save_history(history) {
@@ -104,12 +111,20 @@ function printTotal(mult, rolls, adding, die_type, total) {
     });
 }
 
+function printer(text) {
+    $('#command-output').text(text);
+}
+
 function add_history(adding) {
-    history.push(adding);
-    while ( history > 50 ) {
-        history.shift();
-    }
-    save_history(history);
+    getHist().then( (history) => {
+        history.push(adding);
+        while ( history > 50 ) {
+            history.shift();
+        }
+        save_history(history);
+    }).catch( (err) => {
+        printer(err);
+    });
 }
 
 function new_macro(input) {
@@ -139,6 +154,11 @@ function router(input) {
     if ( input.indexOf("hist") > -1 ) {
         hide();
         show_history();
+        return;
+    }
+
+    if ( input.indexOf("clear") > -1 ) {
+        delete_history();
         return;
     }
     add_history(input);
@@ -269,12 +289,14 @@ function build_hist_card(text) {
 }
 
 function show_history() {
-    var smaller = ( history.length > 10 ) ? 10 : history.length;
-    for ( var i = 0; i < smaller; i++ ) {
-        build_hist_card(history[i]).then( (card) => {
-            $('#hist-deck').append(card);
-        });
-    }
+    getHist().then( (history) => {
+        var smaller = ( history.length < 10 ) ? history.length : 10;
+        for ( var i = 0; i < smaller; i++ ) {
+            build_hist_card(history[i]).then( (card) => {
+                $('#hist-deck').append(card);
+            });
+        }
+    });
 }
 
 function clear_history() {
