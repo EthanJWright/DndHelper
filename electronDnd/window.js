@@ -9,23 +9,23 @@ var hist_file = hist_file = get_path("history.json");
 const macros = load_macros();
 
 function delete_history() {
-    history = [];
-    save_history([]);
+    history = {};
+    saveHist({});
 }
 
 
 function getHist() {
     return new Promise ( (resolve, reject) => {
         if ( fs.existsSync(hist_file) ) {
-            resolve(fs.readFileSync(hist_file, 'utf8').split(','));
+            resolve(JSON.parse(fs.readFileSync(hist_file, 'utf8')));
         }
-        resolve([]);
+        resolve({});
     });
 
 }
 
-function save_history(history) {
-    fs.writeFileSync(hist_file, history.join(','), {encoding: 'utf8',flag:'w'});
+function saveHist(history) {
+    fs.writeFileSync(hist_file, JSON.stringify(history), {encoding: 'utf8',flag:'w'});
 }
 
 function get_path(file) {
@@ -117,11 +117,12 @@ function printer(text) {
 
 function add_history(adding) {
     getHist().then( (history) => {
-        history.push(adding);
-        while ( history > 50 ) {
-            history.shift();
+        if ( history.hasOwnProperty(adding) ) {
+            history[adding] = history[adding] + 1;
+        } else {
+            history[adding] = 1;
         }
-        save_history(history);
+        saveHist(history);
     }).catch( (err) => {
         printer(err);
     });
@@ -290,9 +291,8 @@ function build_hist_card(text) {
 
 function show_history() {
     getHist().then( (history) => {
-        var smaller = ( history.length < 10 ) ? history.length : 10;
-        for ( var i = 0; i < smaller; i++ ) {
-            build_hist_card(history[i]).then( (card) => {
+        for ( var key in history ) {
+            build_hist_card(key).then( (card) => {
                 $('#hist-deck').append(card);
             });
         }
