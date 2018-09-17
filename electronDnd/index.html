@@ -7,7 +7,7 @@
   <title>D&D Helper</title>
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="./styles.css">
 
   <!-- Scripts -->
@@ -25,43 +25,58 @@
     <!-- Input row -->
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
-        <h3 class="hash-heading">D&D Helper</h3>
+        <h1 class="page-title">D&D Helper</h1>
 				<input type="command" id="text-input" class="form-control" id="userCommand" aria-describedby="userCommand" placeholder="Enter Command">
       </div>
     </div>
 
-    <!-- Rolled row -->
-    <div class="row">
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <h3 class="hash-heading">Command was: </h3>
-        <pre id="command-output" class="text-output"> </pre>
-      </div>
-    </div>
+		<div id="main-dom">
+				<!-- Rolled row -->
+				<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<h3 class="result-header"></h3>
+						<pre id="command-output" class="text-output"> </pre>
+				</div>
+				</div>
 
-    <!-- Rolled row -->
-    <div class="row">
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <h3 class="hash-heading">You Rolled: </h3>
-        <pre id="rolled-output" class="text-output"> </pre>
-      </div>
-    </div>
+				<!-- Rolled row -->
+				<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<h3 class="result-header"></h3>
+						<pre id="rolled-output" class="text-output"> </pre>
+				</div>
+				</div>
 
-    <!-- Total row -->
-    <div class="row">
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <h3 class="hash-heading">Total is: </h3>
-        <pre id="total-output" class="text-output"> </pre>
-      </div>
-    </div>
 
-    <!-- Debug row -->
-    <div class="row">
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <h3 class="hash-heading">Debug output: </h3>
-        <pre id="debug-output" class="text-output"> </pre>
-      </div>
-    </div>
+				<!-- Die Box -->
+				<div id="die-box" class="card-columns">
+				</div>
 
+
+
+				<!-- Total row -->
+				<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<h3 class="result-header"></h3>
+						<pre id="total-output" class="text-output"> </pre>
+				</div>
+				</div>
+
+				<!-- Die Box -->
+				<div id="total-box" class="card-columns">
+				</div>
+
+
+				<!-- Debug row -->
+				<!--
+				<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<h3 class="result-header">Debug output: </h3>
+						<pre id="debug-output" class="text-output"> </pre>
+				</div>
+				</div>
+				-->
+		</div>
   </div>
 </body>
 

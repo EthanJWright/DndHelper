@@ -1,19 +1,37 @@
 html, body, .container-fluid {
-  background-color: #D6D8DC;
+  background-color: #012A36;
 }
+
 
 .text-input {
   font-size: 16px;
+  background-color: #80ced7;
 }
 
 .text-output {
-  color: #575B5E;
-  font-size: 16px;
+  color: #FFFFFF;
+  font-size: 20px;
   letter-spacing: 2px;
   white-space: pre-wrap;
 }
 
-.hash-heading {
-  color: #575B5E;
+.page-title {
+  color: #FFFFFF;
   font-weight: normal;
+	text-align: center;
+	padding: 30px;
 }
+
+.result-header {
+		padding: 15px;
+		color: #FFFFFF;
+}
+
+.form-control {
+    background-color: #63c7b2;
+}
+
+.form-control:focus {
+    background-color: #63c7b2;
+}
+
