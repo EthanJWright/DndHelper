@@ -1,9 +1,16 @@
 var main_dom,
     hist_dom,
-    macro_file = "macros.json",
     fs = require('fs');
 
+const electron = require('electron');
+var macro_file = macro_file = get_path("macros.json");
+
 const macros = load_macros();
+
+function get_path(file) {
+    const userDataPath = (electron.app || electron.remote.app).getPath('appData');
+    return userDataPath + file;
+}
 
 function load_macros() {
     if (fs.existsSync(macro_file)) {
