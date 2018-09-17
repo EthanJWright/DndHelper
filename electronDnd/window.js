@@ -2,6 +2,7 @@ var main_dom,
     hist_dom,
     fs = require('fs');
 
+
 const electron = require('electron');
 var macro_file = macro_file = get_path("macros.json");
 var hist_file = hist_file = get_path("history.json");
@@ -128,6 +129,20 @@ function add_history(adding) {
     });
 }
 
+function runHist(input) {
+    var split = input.split(":");
+    index = split[1];
+    getHist().then( (history) => {
+        var counter = 1;
+        for ( var key in history ) {
+            if ( counter == index ) {
+                router(key);
+            }
+            counter++;
+        }
+    });
+}
+
 function new_macro(input) {
     var broken = input.split("=");
     macros[broken[0]] = broken[1];
@@ -152,6 +167,12 @@ function handle_macro(input) {
 }
 
 function router(input) {
+    onAction(input);
+    if ( input.indexOf("h:") > -1 ) {
+        runHist(input);
+        return;
+    }
+
     if ( input.indexOf("hist") > -1 ) {
         hide();
         show_history();
@@ -290,9 +311,12 @@ function build_hist_card(text) {
 }
 
 function show_history() {
+    var counter = 1;
     getHist().then( (history) => {
         for ( var key in history ) {
-            build_hist_card(key).then( (card) => {
+            var message = counter.toString() + " | " + key;
+            counter++;
+            build_hist_card(message).then( (card) => {
                 $('#hist-deck').append(card);
             });
         }
@@ -340,17 +364,20 @@ function add_roll_info(text) {
     $('#rolled-output').text(text);
 }
 
+function onAction(text) {
+    clear_history();
+    $('#die-box').empty();
+    $('#total-box').empty();
+    $('#command-output').text("Command: " + text);
+    reveal();
+    $('#text-input').val('');   
+}
+
 $( () => {
     $('#text-input').keypress( (event) => {
         var keycode = ( event.keyCode ? event.keyCode : event.which );
         var text = $('#text-input').val();
         if ( keycode == '13' ) {
-            clear_history();
-            $('#die-box').empty();
-            $('#total-box').empty();
-            $('#command-output').text("Command: " + text);
-			reveal();
-			$('#text-input').val('');
             router(text);
         }
     });
