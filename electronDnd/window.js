@@ -35,49 +35,49 @@ function get_values(input) {
 		return [mult, adding, die_type];
 }
 
-function roll(input) {
-		[mult, adding, die_type] = get_values(input);
-		var rand = Math.floor(Math.random() * (die_type - 2)) + 1;
-    var equation = mult.toString() + " * " + die_type.toString() + " + " + adding.toString();
-
+function displayRolls(rolls) {
     var printing = "You rolled: ";
-    var rolled = [];
-		var to_sum = [];
-    for ( var i = 0; i < mult; i++ ) {
-        const min = 1;
-        const max = die_type;
-        var outcome = Math.floor(Math.random() * (max - min + 1)) + min;
-				var die_info = {
-						"max" : die_type,
-						"outcome" : outcome
-				};
-        add_card(die_info);
-		to_sum.push(outcome);
-        printing += outcome.toString() + " | ";
+    for (var i = 0; i < rolls.length; i++) {
+        printing += rolls[i].toString() + " | ";
     }
     printing = printing.substring(0, printing.length - 3);
     add_roll_info(printing);
-    var total = to_sum.reduce(getSum) + adding;
-		var math_say = "";
-		for ( var i = 0; i < to_sum.length; i++ ) {
-				math_say += to_sum[i] + " + ";
-		}
-    math_say = math_say.substring(0, math_say.length - 3);
-		if ( adding > 0 ) {
-				math_say += " + " + adding.toString();
-		}
-		if ( adding < 0 ) {
-				math_say += " - " + Math.abs(adding).toString();
-		}
-		math_say += " = " + total.toString();
-    add_total_text(math_say);
+}
 
-    var total_report = + total.toString();
-		var total_obj = {
-				"max" : (mult * die_type) + adding,
-				"outcome" : total
-		};
-    add_total(total_obj);
+function printTotal(mult, rolls, adding, die_type, total) {
+    var report = "";
+    for ( var i = 0; i <  rolls.length; i++) {
+        report += rolls[i] + " + ";
+    }
+    // Remove extra + at end
+    report = report.substring(0, report.length - 3);
+    if ( adding > 0 ) {
+        report += " + " + adding.toString();
+    }
+    if ( adding < 0  ) {
+        report += " - " + Math.absolute(adding.toString());
+    }
+    report += " = " + total.toString();
+    add_total_text(report);
+    add_total_card({
+        "outcome" : rolls.reduce(getSum) + adding,
+        "max" : (mult * die_type) + adding
+    });
+}
+
+function roll(input) {
+    [mult, adding, die_type] = get_values(input);
+	var rolls = [];
+    for ( var i = 0; i < mult; i++ ) {
+        var outcome = Math.floor(Math.random() * (die_type)) + 1;
+        add_card({ "max" : die_type, "outcome" : outcome });
+		rolls.push(outcome);
+    }
+    displayRolls(rolls);
+
+    var total = rolls.reduce(getSum) + adding;
+
+    printTotal(mult, rolls, adding, die_type, total);
 }
 
 function getSum(total, num) {
@@ -132,7 +132,7 @@ function add_card(info) {
     });
 }
 
-function add_total(info) {
+function add_total_card(info) {
     build_card(info).then( (card) => {
         $('#total-box').append(card);
     }).catch( (err) => {
