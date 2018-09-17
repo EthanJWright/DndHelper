@@ -1,5 +1,22 @@
 var main_dom,
-		hist_dom;
+    hist_dom,
+    macro_file = "macros.json",
+    fs = require('fs');
+
+const macros = load_macros();
+
+function load_macros() {
+    if (fs.existsSync(macro_file)) {
+        return JSON.parse(fs.readFileSync(macro_file, 'utf8'));
+    } else {
+        return {};
+    }
+    
+}
+
+function save_macro(macros) {
+    fs.writeFileSync(macro_file,JSON.stringify(macros),{encoding:'utf8',flag:'w'});
+}
 
 $( document ).ready( () => {
 		hide();
@@ -70,7 +87,38 @@ function printTotal(mult, rolls, adding, die_type, total) {
     });
 }
 
+function new_macro(input) {
+    var broken = input.split("=");
+    macros[broken[0]] = broken[1];
+
+    $('#command-output').text("Saved macro: " + broken[0] + " | " + broken[1]);
+    $('#rolled-output').text("");
+    $('#total-output').text("");
+    save_macro(macros);
+}
+
+function is_macro(input) {
+    if ( macros.hasOwnProperty(input) ) {
+        return true;
+    } 
+    return false;
+}
+
+function handle_macro(input) {
+    const macro = macros[input];
+    $('#command-output').text("Macro used: " + macro);
+    roll(macro);
+}
+
 function router(input) {
+    if ( input.indexOf("=") > -1 ) {
+        new_macro(input);
+        return;
+    }
+    if ( is_macro(input) ) {
+        handle_macro(input);
+        return;
+    }
     if ( input[0] == "a" ) {
         special(input, true);
     } 
@@ -139,6 +187,7 @@ function special(input, advantage) {
 }
 
 function roll(input) {
+    input = input.split(' ').join('');
     [mult, adding, die_type] = get_values(input);
 	var rolls = [];
     for ( var i = 0; i < mult; i++ ) {
