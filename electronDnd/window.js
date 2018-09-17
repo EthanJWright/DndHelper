@@ -4,8 +4,22 @@ var main_dom,
 
 const electron = require('electron');
 var macro_file = macro_file = get_path("macros.json");
+var hist_file = hist_file = get_path("history.json");
 
 const macros = load_macros();
+const history = load_history();
+
+
+function load_history() {
+    if ( fs.existsSync(hist_file) ) {
+        return fs.readFileSync(hist_file, 'utf8').split(',');
+    }
+    return [];
+}
+
+function save_history(history) {
+    fs.writeFileSync(hist_file, history.join(','), {encoding: 'utf8',flag:'w'});
+}
 
 function get_path(file) {
     const userDataPath = (electron.app || electron.remote.app).getPath('appData');
@@ -24,10 +38,6 @@ function load_macros() {
 function save_macro(macros) {
     fs.writeFileSync(macro_file,JSON.stringify(macros),{encoding:'utf8',flag:'w'});
 }
-
-$( document ).ready( () => {
-		hide();
-});
 
 function rolled(die_type) {
     const min = 1;
@@ -94,6 +104,14 @@ function printTotal(mult, rolls, adding, die_type, total) {
     });
 }
 
+function add_history(adding) {
+    history.push(adding);
+    while ( history > 50 ) {
+        history.shift();
+    }
+    save_history(history);
+}
+
 function new_macro(input) {
     var broken = input.split("=");
     macros[broken[0]] = broken[1];
@@ -118,6 +136,12 @@ function handle_macro(input) {
 }
 
 function router(input) {
+    if ( input.indexOf("hist") > -1 ) {
+        hide();
+        show_history();
+        return;
+    }
+    add_history(input);
     if ( input.indexOf("=") > -1 ) {
         new_macro(input);
         return;
@@ -220,11 +244,6 @@ function categorize(result, max) {
 		else if ( result > ( max - Math.ceil(max * 0.3) ) ) {
 				return 'bg-info';
 		} 
-        /*
-		else if ( result > ( max - Math.ceil(max * 0.4) ) ) {
-				return 'bg-warning';
-		}
-        */
 		else if ( result != 1 ) {
 				return 'bg-warning'; } 
 		else {
@@ -242,11 +261,32 @@ function build_card(die_info) {
 		});
 }
 
-function hide() {
-		[].forEach.call(document.querySelectorAll('.result-header'), function (res) {
-				  res.style.visibility = 'hidden';
+function build_hist_card(text) {
+    return new Promise( (resolve, reject) => {
+        var card = '<div class="card bg-info"><div class="card-body text-center"><p class="card-text">' + text + '</div></div>';
+        resolve(card);
+    });
+}
 
-		});
+function show_history() {
+    var smaller = ( history.length > 10 ) ? 10 : history.length;
+    for ( var i = 0; i < smaller; i++ ) {
+        build_hist_card(history[i]).then( (card) => {
+            $('#hist-deck').append(card);
+        });
+    }
+}
+
+function clear_history() {
+    $('#hist-deck').empty();
+}
+
+function hide() {
+        $('#die-box').empty();
+        $('#total-box').empty();
+        $('#command-output').text("");
+        $('#rolled-output').text("");
+        $('#total-output').text("");
 }
 
 function reveal() {
@@ -283,6 +323,7 @@ $( () => {
         var keycode = ( event.keyCode ? event.keyCode : event.which );
         var text = $('#text-input').val();
         if ( keycode == '13' ) {
+            clear_history();
             $('#die-box').empty();
             $('#total-box').empty();
             $('#command-output').text("Command: " + text);

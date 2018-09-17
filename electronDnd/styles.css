@@ -15,6 +15,10 @@ html, body, .container-fluid {
   white-space: pre-wrap;
 }
 
+.history {
+		padding: 10px;
+}
+
 .page-title {
   color: #FFFFFF;
   font-weight: normal;
@@ -28,6 +32,7 @@ html, body, .container-fluid {
 }
 
 .form-control {
+		padding: 10px;
     background-color: #63c7b2;
 }
 
@@ -35,3 +40,6 @@ html, body, .container-fluid {
     background-color: #63c7b2;
 }
 
+.row {
+		padding: 10px;
+}
