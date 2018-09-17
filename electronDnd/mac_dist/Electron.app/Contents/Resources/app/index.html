@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+
+  <title>D&D Helper</title>
+
+  <!-- Stylesheets -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="./styles.css">
+
+  <!-- Scripts -->
+  <script>
+    delete module.exports
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+  <script src="./window.js" charset="utf-8"></script>
+
+</head>
+
+<body>
+  <div id="container" class="container-fluid">
+
+    <!-- Input row -->
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+        <h1 class="page-title">D&D Helper</h1>
+				<input type="command" id="text-input" class="form-control" id="userCommand" aria-describedby="userCommand" placeholder="Enter Command">
+      </div>
+    </div>
+
+		<div id="main-dom">
+				<!-- Rolled row -->
+				<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<h3 class="result-header"></h3>
+						<pre id="command-output" class="text-output"> </pre>
+				</div>
+				</div>
+
+				<!-- Rolled row -->
+				<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<h3 class="result-header"></h3>
+						<pre id="rolled-output" class="text-output"> </pre>
+				</div>
+				</div>
+
+
+				<!-- Die Box -->
+				<div id="die-box" class="card-columns">
+				</div>
+
+
+
+				<!-- Total row -->
+				<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<h3 class="result-header"></h3>
+						<pre id="total-output" class="text-output"> </pre>
+				</div>
+				</div>
+
+				<!-- Die Box -->
+				<div id="total-box" class="card-columns">
+				</div>
+
+
+				<!-- Debug row -->
+				<!--
+				<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<h3 class="result-header">Debug output: </h3>
+						<pre id="debug-output" class="text-output"> </pre>
+				</div>
+				</div>
+				-->
+		</div>
+  </div>
+</body>
+
+</html>
