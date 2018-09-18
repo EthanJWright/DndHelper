@@ -7,11 +7,16 @@ const electron = require('electron');
 var macro_file = macro_file = get_path("macros.json");
 var hist_file = hist_file = get_path("history.json");
 
-const macros = load_macros();
+var macros = load_macros();
 
 function delete_history() {
     history = {};
     saveHist({});
+}
+
+function delete_macro() {
+		macros = {};
+		save_macro({});
 }
 
 function getSorted(history) {
@@ -193,6 +198,11 @@ function router(input) {
         runHist(input);
         return;
     }
+    if ( input.indexOf("?") > -1 || input.indexOf("help") > -1) {
+        hide();
+        show_help();
+        return;
+    }
 
     if ( input.indexOf("hist") > -1 ) {
         hide();
@@ -201,18 +211,32 @@ function router(input) {
     }
 
     if ( input.indexOf("clear") > -1 ) {
-        delete_history();
+				if ( input.indexOf("macro") > -1 ) {
+						delete_macro();
+				} else {
+						delete_history();
+				}
         return;
     }
-    add_history(input);
+		if ( input.indexOf("macro") > -1 ) {
+				hide();
+				show_macros();
+				return;
+		}
+
     if ( input.indexOf("=") > -1 ) {
         new_macro(input);
         return;
     }
+
+    add_history(input);
+
     if ( is_macro(input) ) {
         handle_macro(input);
         return;
     }
+
+
     if ( input[0] == "a" ) {
         special(input, true);
     } 
@@ -254,10 +278,13 @@ function special(input, advantage) {
 
     var final = outcome2;
     if ( advantage ) {
+
+				$('#command-output').text("Advantage " + input.slice(1));
         if ( outcome1 > outcome2 ) {
             final = outcome1;
         }
     } else {
+				$('#command-output').text("Disadvantage " + input.slice(1));
         if ( outcome1 < outcome2 ) {
             final = outcome1;
         }
@@ -326,16 +353,47 @@ function build_card(die_info) {
 
 function build_hist_card(text) {
     return new Promise( (resolve, reject) => {
-        var card = '<div class="card bg-info"><div class="card-body text-center"><p class="card-text">' + text + '</div></div>';
+        var card = '<div class="info card bg-info my-4"><div class="card-body text-center"><p class="card-text">' + text + '</div></div>';
         resolve(card);
     });
+}
+
+function show_macros() {
+		var counter = 1;
+		for ( var key in macros ) {
+				var first = "        ";
+				first = first.slice(key.length);
+				var key_buff = key + first;
+				var message = key_buff + "|   " + macros[key];
+				build_hist_card(message).then( (card) => {
+						$('#hist-deck').append(card);
+				});
+		}
+}
+
+const help = {
+    "Examples" : " the following are examples of commands and what they do.",
+    "macro" : "Show a list of all macros",
+    "gs=2d6+5" : "Save macro gs as 2d6+5",
+    "a+1" : "roll advantage with +1",
+    "d-2" : "roll disadvantage with -2",
+    "history" : "Show most used commands throughout history"
+};
+
+function show_help() {
+    for ( var key in help ) {
+        var message = key + " | " + help[key];
+        build_hist_card(message).then( (card) => {
+                $('#hist-deck').append(card);
+        });
+    }
 }
 
 function show_history() {
     var counter = 1;
     getHist().then( (history) => {
         for ( var key in history ) {
-            var message = counter.toString() + " | " + key;
+            var message = counter.toString() + "   |   " + key;
             counter++;
             build_hist_card(message).then( (card) => {
                 $('#hist-deck').append(card);

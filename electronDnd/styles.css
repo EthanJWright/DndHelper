@@ -15,6 +15,15 @@ html, body, .container-fluid {
   white-space: pre-wrap;
 }
 
+.card-rows {
+		bottom-margin: 10px;
+}
+
+.card-text { 
+		text-align: left;
+		white-space:pre;
+}
+
 .history {
 		padding: 10px;
 }
