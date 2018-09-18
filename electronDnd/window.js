@@ -8,10 +8,15 @@ var macro_file = macro_file = get_path("macros.json");
 var hist_file = hist_file = get_path("history.json");
 
 var macros = load_macros();
+var logs = [];
 
 function delete_history() {
     history = {};
     saveHist({});
+}
+
+function delete_log() {
+    logs = [];
 }
 
 function delete_macro() {
@@ -53,6 +58,14 @@ function saveHist(history) {
 function get_path(file) {
     const userDataPath = (electron.app || electron.remote.app).getPath('appData');
     return userDataPath + file;
+}
+
+function getLog() {
+    if (fs.existsSync(macro_file)) {
+        return fs.readFileSync(macro_file, 'utf8').split('||');
+    } else {
+        return [];
+    }
 }
 
 function load_macros() {
@@ -211,18 +224,26 @@ function router(input) {
     }
 
     if ( input.indexOf("clear") > -1 ) {
-				if ( input.indexOf("macro") > -1 ) {
-						delete_macro();
-				} else {
-						delete_history();
-				}
+        if ( input.indexOf("macro") > -1 ) {
+            delete_macro();
+        } else if ( input.indexOf("hist") ) {
+            delete_history();
+        } else {
+            delete_log();
+        }
         return;
     }
-		if ( input.indexOf("macro") > -1 ) {
-				hide();
-				show_macros();
-				return;
-		}
+    if ( input.indexOf("macro") > -1 ) {
+        hide();
+        show_macros();
+        return;
+    }
+
+    if ( input.indexOf("log") > -1 ) {
+        hide();
+        show_log();
+        return;
+    }
 
     if ( input.indexOf("=") > -1 ) {
         new_macro(input);
@@ -277,18 +298,21 @@ function special(input, advantage) {
     });
 
     var final = outcome2;
+    var type = "Advantage: ";
     if ( advantage ) {
-
-				$('#command-output').text("Advantage " + input.slice(1));
+		$('#command-output').text("Advantage " + input.slice(1));
         if ( outcome1 > outcome2 ) {
             final = outcome1;
         }
     } else {
-				$('#command-output').text("Disadvantage " + input.slice(1));
+        type = "Disadvantage: ";
+		$('#command-output').text("Disadvantage " + input.slice(1));
         if ( outcome1 < outcome2 ) {
             final = outcome1;
         }
     }
+    var logMess = type + "2d20 (" + outcome1 + " , " + outcome2 + ")" + getAddStr(adding) + " = " + final;
+    logs.push(logMess);
 
     rolls = [outcome1, outcome2];
     displayRolls(rolls);
@@ -307,9 +331,20 @@ function special(input, advantage) {
     });
 }
 
+function getAddStr(adding) {
+    if ( adding > 0 ) {
+        return " + " + adding.toString();
+    } else if ( adding < 0 ) {
+        return " - " + Math.abs(adding).toString();
+    } else {
+        return "";
+    }
+}
+
 function roll(input) {
     input = input.split(' ').join('');
     [mult, adding, die_type] = get_values(input);
+    var add_str = "";
 	var rolls = [];
     for ( var i = 0; i < mult; i++ ) {
         var outcome = Math.floor(Math.random() * (die_type)) + 1;
@@ -319,7 +354,8 @@ function roll(input) {
     displayRolls(rolls);
 
     var total = rolls.reduce(getSum) + adding;
-
+    var logMess = mult.toString() + "d" + die_type + "(" + rolls.join(', ') + ")" + getAddStr(adding) + " = " + total;
+    logs.push(logMess);
     printTotal(mult, rolls, adding, die_type, total);
 }
 
@@ -356,6 +392,14 @@ function build_hist_card(text) {
         var card = '<div class="info card bg-info my-4"><div class="card-body text-center"><p class="card-text">' + text + '</div></div>';
         resolve(card);
     });
+}
+
+function show_log() {
+    for (var i = logs.length-1; i >= 0; i--) {
+        build_hist_card(logs[i]).then( (card) => {
+            $('#hist-deck').append(card);
+        });
+    }
 }
 
 function show_macros() {
