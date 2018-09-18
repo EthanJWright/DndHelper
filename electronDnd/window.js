@@ -137,6 +137,11 @@ function add_history(adding) {
         if ( history.hasOwnProperty(adding) ) {
             history[adding] = history[adding] + 1;
         } else {
+            var sorted = getSorted(history);
+            while ( sorted.length > 7 ) {
+                delete history[sorted[0][0]];
+                var sorted = getSorted(history);
+            }
             history[adding] = 1;
         }
         saveHist(history);
