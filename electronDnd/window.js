@@ -377,6 +377,7 @@ const help = {
     "a+1" : "roll advantage with +1",
     "d-2" : "roll disadvantage with -2",
     "history" : "Show most used commands throughout history",
+    "h:1" : "select item 1 from history",
 	"clear hist" : "clear history, clear macros to clear macros"
 };
 
