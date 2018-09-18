@@ -311,8 +311,7 @@ function special(input, advantage) {
             final = outcome1;
         }
     }
-    var logMess = type + "2d20 (" + outcome1 + " , " + outcome2 + ")" + getAddStr(adding) + " = " + final;
-    logs.push(logMess);
+
 
     rolls = [outcome1, outcome2];
     displayRolls(rolls);
@@ -329,6 +328,8 @@ function special(input, advantage) {
         "outcome" : final + adding,
         "max" : 20 + adding
     });
+    var logMess = type + "2d20 (" + outcome1 + " , " + outcome2 + ")" + getAddStr(adding) + " = " + (final + adding);
+    logs.push(logMess);
 }
 
 function getAddStr(adding) {
