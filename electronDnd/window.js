@@ -344,6 +344,11 @@ function getAddStr(adding) {
 function roll(input) {
     input = input.split(' ').join('');
     [mult, adding, die_type] = get_values(input);
+    if ( isNaN(mult) || isNaN(adding) || isNaN(die_type) ) {
+        hide();
+        printer("Couldn't interpret command: " + input);
+        return;
+    }
     var add_str = "";
 	var rolls = [];
     for ( var i = 0; i < mult; i++ ) {
