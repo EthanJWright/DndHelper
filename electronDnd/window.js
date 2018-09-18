@@ -14,11 +14,27 @@ function delete_history() {
     saveHist({});
 }
 
+function getSorted(history) {
+    var sortable = [];
+    for ( var key in history ) {
+        sortable.push([key, history[key]]);
+    }
+    sortable.sort((a,b) => {
+        return a[1] - b[1];
+    });
+    return sortable;
+}
 
 function getHist() {
     return new Promise ( (resolve, reject) => {
         if ( fs.existsSync(hist_file) ) {
-            resolve(JSON.parse(fs.readFileSync(hist_file, 'utf8')));
+            var history = JSON.parse(fs.readFileSync(hist_file, 'utf8'));
+            var new_hist = {};
+            var sortable = getSorted(history);
+            for (var i = sortable.length-1; i >= 0; i--) {
+                new_hist[sortable[i][0]] = sortable[i][1];
+            }
+            resolve(new_hist);
         }
         resolve({});
     });
