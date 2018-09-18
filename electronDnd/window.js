@@ -372,12 +372,12 @@ function show_macros() {
 }
 
 const help = {
-    "Examples" : " the following are examples of commands and what they do.",
     "macro" : "Show a list of all macros",
     "gs=2d6+5" : "Save macro gs as 2d6+5",
     "a+1" : "roll advantage with +1",
     "d-2" : "roll disadvantage with -2",
-    "history" : "Show most used commands throughout history"
+    "history" : "Show most used commands throughout history",
+	"clear hist" : "clear history, clear macros to clear macros"
 };
 
 function show_help() {
