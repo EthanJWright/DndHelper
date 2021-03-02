@@ -2,3 +2,4 @@ macros.json
 node_modules
 DndHelper-darwin-x64
 DndHelper-linux-x64
+DndHelper-win32-x64
