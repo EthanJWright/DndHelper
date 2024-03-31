@@ -18,7 +18,7 @@ jobs:
           node-version: "14"
 
       - name: Install dependencies
-        run: npm install
+        run: npm install electron-packager
 
       - name: Build Linux Electron app
         run: electron-packager . DnDHelper --platform=linux --arch
@@ -35,7 +35,7 @@ jobs:
           node-version: "14"
 
       - name: Install dependencies
-        run: npm install
+        run: npm install electron-packager
 
       - name: Build macOS Electron app
         run: electron-packager . DnDHelper --platform=darwin --arc
