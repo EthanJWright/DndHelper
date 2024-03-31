@@ -19,7 +19,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install electron-packager -g
-        working-directory: DndHelper
+        working-directory: electronDnd
 
       - name: Build Linux Electron app
         working-directory: electronDnd
