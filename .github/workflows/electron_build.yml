@@ -21,7 +21,7 @@ jobs:
         run: npm install electron-packager -g
 
       - name: Build Linux Electron app
-        run: electron-packager . DnDHelper --platform=linux --arch
+        run: electron-packager . DndHelper --platform=linux --arch=x64 --electronVersion=2.0.9 --icon=assets/ico/d20.ico
 
   build_mac:
     runs-on: macos-latest
@@ -38,4 +38,4 @@ jobs:
         run: npm install electron-packager -g
 
       - name: Build macOS Electron app
-        run: electron-packager . DnDHelper --platform=darwin --arc
+        run: electron-packager . DndHelper --platform=darwin --arch=x64 --electronVersion=2.0.9 --icon=assets/icns/d20.icns
