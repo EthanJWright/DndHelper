@@ -38,8 +38,8 @@ jobs:
 
       - name: Install dependencies
         run: npm install electron-packager -g
-        working-directory: DndHelper
+        working-directory: electronDnd
 
       - name: Build macOS Electron app
         run: electron-packager . DndHelper --platform=darwin --arch=x64 --electronVersion=2.0.9 --icon=assets/icns/d20.icns
-        working-directory: DndHelper/electronDnd
+        working-directory: electronDnd
