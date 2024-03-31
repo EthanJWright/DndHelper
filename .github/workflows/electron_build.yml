@@ -22,8 +22,8 @@ jobs:
         working-directory: DndHelper
 
       - name: Build Linux Electron app
-        run: electron-packager . DndHelper --platform=linux --arch=x64 --electronVersion=2.0.9 --icon=assets/ico/d20.ico
-        working-directory: DndHelper/electronDnd
+        working-directory: electronDnd
+        run: ./linux_setup.sh
 
   build_mac:
     runs-on: macos-latest
@@ -41,5 +41,5 @@ jobs:
         working-directory: electronDnd
 
       - name: Build macOS Electron app
-        run: electron-packager . DndHelper --platform=darwin --arch=x64 --electronVersion=2.0.9 --icon=assets/icns/d20.icns
+        run: ./mac_setup.sh
         working-directory: electronDnd
