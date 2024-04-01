@@ -43,3 +43,9 @@ jobs:
       - name: Build macOS Electron app
         run: ./mac_setup.sh
         working-directory: electronDnd
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: electron-build-artifacts
+          path: electronDnd/DndHelper-darwin-x64
